@@ -272,6 +272,17 @@ std::vector<WaveSeed> wave_seeds(
             //(front.z() < 0 && back.z() < 0));
             // Hope that at least one end of an open polyline is clipped by the boundary, thus an intersection point is created.
             (front.z() < 0 || back.z() < 0));
+
+        if (front != back && front.z() >= 0 && back.z() >= 0) {
+            // Very rare case when both endpoints intersect boundary ExPolygons in existing points.
+            // So the ZFillFunction callback hasn't been called.
+            continue;
+        } else if (front == back && (front.z() < idx_boundary_end)) {
+            // This should be a very rare exception.
+            // See https://github.com/prusa3d/PrusaSlicer/issues/12469.
+            continue;
+        }
+
         const Intersection *intersection = nullptr;
         auto intersection_point_valid = [idx_boundary_end, idx_src_end](const Intersection &is) {
             return is.first >= 1 && is.first < idx_boundary_end &&
