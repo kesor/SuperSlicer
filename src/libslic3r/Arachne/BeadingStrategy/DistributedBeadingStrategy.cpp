@@ -41,6 +41,22 @@ DistributedBeadingStrategy::Beading DistributedBeadingStrategy::compute(const co
             weights[bead_idx] = getWeight(bead_idx);
 
         const float total_weight      = std::accumulate(weights.cbegin(), weights.cend(), 0.f);
+        if (total_weight == 0.f) {
+            // All weights are zero - fall back to equal distribution
+            coord_t accumulated_width = 0;
+            for (coord_t bead_idx = 0; bead_idx < bead_count; bead_idx++) {
+                // Use accumulated width for last bead to avoid rounding errors
+                const coord_t width = (bead_idx == bead_count - 1) ? thickness - accumulated_width : thickness / bead_count;
+                if (bead_idx == 0)
+                    ret.toolpath_locations.emplace_back(width / 2);
+                else
+                    // Use average of previous and current widths for consistent toolpath positioning
+                    ret.toolpath_locations.emplace_back(ret.toolpath_locations.back() + (ret.bead_widths.back() + width) / 2);
+                ret.bead_widths.emplace_back(width);
+                accumulated_width += width;
+            }
+            return ret;
+        }
         coord_t     accumulated_width = 0;
         for (coord_t bead_idx = 0; bead_idx < bead_count; bead_idx++) {
             const float   weight_fraction          = weights[bead_idx] / total_weight;
