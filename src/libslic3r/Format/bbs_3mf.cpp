@@ -1414,7 +1414,6 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             if(config.opt<ConfigOptionEnum<LabelObjectsStyle>>("gcode_label_objects") == nullptr)
                 config.set_key_value("gcode_label_objects", new ConfigOptionEnum<LabelObjectsStyle>(LabelObjectsStyle::Disabled));
             LabelObjectsStyle has_label_objests = config.opt<ConfigOptionEnum<LabelObjectsStyle>>("gcode_label_objects")->value;
-                config.opt<ConfigOptionEnum<LabelObjectsStyle>>("gcode_label_objects")->value;
             if (has_label_objests == LabelObjectsStyle::Disabled) {
                 bool a_plate_has_label_obejct = false;
                 for (PlateData *plate : plate_data_list)
