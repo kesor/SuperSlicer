@@ -869,7 +869,7 @@ void AppUpdater::sync_download()
 #else
                 //linux
                 if (name.find("ubuntu") != std::string::npos ||
-                    name.find("linux") != std::string::npos && name.find("appimage") != std::string::npos)
+                    (name.find("linux") != std::string::npos && name.find("appimage") != std::string::npos))
 #endif
                 {
                     input_data.url = json_asset.second.get<std::string>("browser_download_url");
