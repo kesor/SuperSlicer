@@ -272,8 +272,10 @@ void fixSelfIntersections(const coord_t epsilon, Polygons &thiss)
                     assert(Slic3r::sqr(double(vec.x())) < double(std::numeric_limits<int64_t>::max()));
                     assert(Slic3r::sqr(double(vec.y())) < double(std::numeric_limits<int64_t>::max()));
                     const int64_t len   = vec.norm();
-                    pt.x() += (-vec.y() * move_dist) / len;
-                    pt.y() += (vec.x() * move_dist) / len;
+                    if (len > 0) {
+                        pt.x() += (-vec.y() * move_dist) / len;
+                        pt.y() += (vec.x() * move_dist) / len;
+                    }
                 }
             }
         }
