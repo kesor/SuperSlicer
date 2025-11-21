@@ -3105,14 +3105,34 @@ public:
     const std::string&  opt_string(const t_config_option_key &opt_key, size_t idx) const        { return const_cast<ConfigBase*>(this)->opt_string(opt_key, idx); }
 
     double&             opt_float(const t_config_option_key &opt_key)                           { return this->option<ConfigOptionFloat>(opt_key)->value; }
-    const double&       opt_float(const t_config_option_key &opt_key) const                     { return dynamic_cast<const ConfigOptionFloat*>(this->option(opt_key))->value; }
+    const double&       opt_float(const t_config_option_key &opt_key) const                     { 
+        auto* opt = dynamic_cast<const ConfigOptionFloat*>(this->option(opt_key));
+        assert(opt != nullptr);
+        if (!opt) throw ConfigurationError("Invalid config option type for key: " + opt_key);
+        return opt->value;
+    }
     double&             opt_float(const t_config_option_key &opt_key, size_t idx)               { return this->option<ConfigOptionFloats>(opt_key)->get_at(idx); }
-    const double&       opt_float(const t_config_option_key &opt_key, size_t idx) const         { return dynamic_cast<const ConfigOptionFloats*>(this->option(opt_key))->get_at(idx); }
+    const double&       opt_float(const t_config_option_key &opt_key, size_t idx) const         { 
+        auto* opt = dynamic_cast<const ConfigOptionFloats*>(this->option(opt_key));
+        assert(opt != nullptr);
+        if (!opt) throw ConfigurationError("Invalid config option type for key: " + opt_key);
+        return opt->get_at(idx);
+    }
 
     int32_t&            opt_int(const t_config_option_key &opt_key)                             { return this->option<ConfigOptionInt>(opt_key)->value; }
-    int32_t             opt_int(const t_config_option_key &opt_key) const                       { return dynamic_cast<const ConfigOptionInt*>(this->option(opt_key))->value; }
+    int32_t             opt_int(const t_config_option_key &opt_key) const                       { 
+        auto* opt = dynamic_cast<const ConfigOptionInt*>(this->option(opt_key));
+        assert(opt != nullptr);
+        if (!opt) throw ConfigurationError("Invalid config option type for key: " + opt_key);
+        return opt->value;
+    }
     int32_t&            opt_int(const t_config_option_key &opt_key, size_t idx)                 { return this->option<ConfigOptionInts>(opt_key)->get_at(idx); }
-    int32_t             opt_int(const t_config_option_key &opt_key, size_t idx) const           { return dynamic_cast<const ConfigOptionInts*>(this->option(opt_key))->get_at(idx); }
+    int32_t             opt_int(const t_config_option_key &opt_key, size_t idx) const           { 
+        auto* opt = dynamic_cast<const ConfigOptionInts*>(this->option(opt_key));
+        assert(opt != nullptr);
+        if (!opt) throw ConfigurationError("Invalid config option type for key: " + opt_key);
+        return opt->get_at(idx);
+    }
     
     // no dynamic_cast
     bool      get_bool(const t_config_option_key &opt_key, size_t idx = 0) const                 {return this->option(opt_key)->get_bool(idx);}
