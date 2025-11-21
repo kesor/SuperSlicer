@@ -66,7 +66,7 @@ using lengthsqr_t = uint64_t;
 #endif
 
 
-inline uint16_t operator "" _u(unsigned long long value)
+inline uint16_t operator ""_u(unsigned long long value)
 {
     return static_cast<uint16_t>(value);
 }
