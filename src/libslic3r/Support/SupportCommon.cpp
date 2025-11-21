@@ -1324,7 +1324,8 @@ static void modulate_extrusion_by_overlapping_layers(
     }
     for (ExtrusionEntitiesPtr::const_iterator it = extrusions_in_out.set_entities().begin(); it != extrusions_in_out.set_entities().end(); ++ it) {
         ExtrusionPath *path = dynamic_cast<ExtrusionPath*>(*it);
-        assert(path != nullptr);
+        if (!path)
+            continue;
         bbox.merge(get_extents(path->polyline.as_polyline()));
     }
     SVG svg(debug_out_path("support-fragments-%d-%lf.svg", iRun, this_layer.print_z).c_str(), bbox);
@@ -1344,6 +1345,8 @@ static void modulate_extrusion_by_overlapping_layers(
     // Fill extrusion, the source.
     for (ExtrusionEntitiesPtr::const_iterator it = extrusions_in_out.set_entities().begin(); it != extrusions_in_out.set_entities().end(); ++ it) {
         ExtrusionPath *path = dynamic_cast<ExtrusionPath*>(*it);
+        if (!path)
+            continue;
         std::string color_name;
         switch ((it - extrusions_in_out.set_entities().begin()) % 9) {
             case 0: color_name = "magenta"; break;
