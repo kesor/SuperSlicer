@@ -293,7 +293,11 @@ public:
 
     Point& operator+=(const Point& rhs) { this->x() += rhs.x(); this->y() += rhs.y(); return *this; }
     Point& operator-=(const Point& rhs) { this->x() -= rhs.x(); this->y() -= rhs.y(); return *this; }
-	Point& operator*=(const double &rhs) { this->x() = coord_t(this->x() * rhs); this->y() = coord_t(this->y() * rhs); return *this; }
+	Point& operator*=(const double &rhs) { 
+        this->x() = coord_t(std::clamp(this->x() * rhs, double(std::numeric_limits<coord_t>::min()), double(std::numeric_limits<coord_t>::max()))); 
+        this->y() = coord_t(std::clamp(this->y() * rhs, double(std::numeric_limits<coord_t>::min()), double(std::numeric_limits<coord_t>::max()))); 
+        return *this; 
+    }
     //Point operator*(const double &rhs) const { return Point(this->x() * rhs, this->y() * rhs); } //already exist outside
 
     void   rotate(double angle) { this->rotate(std::cos(angle), std::sin(angle)); }
@@ -330,7 +334,10 @@ inline bool operator<(const Point &l, const Point &r)
 
 inline Point operator* (const Point& l, const double &r)
 {
-    return {coord_t(l.x() * r), coord_t(l.y() * r)};
+    return {
+        coord_t(std::clamp(l.x() * r, double(std::numeric_limits<coord_t>::min()), double(std::numeric_limits<coord_t>::max()))),
+        coord_t(std::clamp(l.y() * r, double(std::numeric_limits<coord_t>::min()), double(std::numeric_limits<coord_t>::max())))
+    };
 }
 
 inline bool is_approx(const Point &p1, const Point &p2, coord_t epsilon = coord_t(SCALED_EPSILON))
