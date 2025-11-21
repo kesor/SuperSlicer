@@ -2869,8 +2869,8 @@ public:
 
     bool                    has(const t_config_option_key &opt_key) const { return this->options.count(opt_key) > 0; }
     const ConfigOptionDef*  get(const t_config_option_key &opt_key) const {
-        t_optiondef_map::iterator it = const_cast<ConfigDef*>(this)->options.find(opt_key);
-        return (it == this->options.end()) ? nullptr : &it->second;
+        auto it = options.find(opt_key);
+        return (it == options.end()) ? nullptr : &it->second;
     }
     std::vector<std::string> keys() const {
         std::vector<std::string> out;
