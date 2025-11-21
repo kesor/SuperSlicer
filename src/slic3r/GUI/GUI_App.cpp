@@ -2414,9 +2414,10 @@ std::string GUI_App::get_first_mode_btn_color(ConfigOptionMode mode_id) const
 std::string GUI_App::get_last_mode_btn_color(ConfigOptionMode mode_id) const
 {
     assert(0 <= size_t(mode_id));
-    assert(size_t(mode_id)< get_app_config()->tags().size());
-    for (size_t idx_p1 = get_app_config()->tags().size(); idx_p1 > 0; --idx_p1) {
-        const AppConfig::Tag& tag = get_app_config()->tags()[idx_p1-1];
+    const auto& tags = get_app_config()->tags();
+    assert(size_t(mode_id) < tags.size());
+    for (size_t idx_p1 = tags.size(); idx_p1 > 0; --idx_p1) {
+        const AppConfig::Tag& tag = tags[idx_p1-1];
         // get the first good tag.
         if ((tag.tag & mode_id) == tag.tag) {
             // store the pointer so we can return a valid reference.
