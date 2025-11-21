@@ -43,7 +43,7 @@ LimitedBeadingStrategy::Beading LimitedBeadingStrategy::compute(coord_t thicknes
         Beading ret = parent->compute(thickness, bead_count);
         bead_count = ret.toolpath_locations.size();
 
-        if (bead_count % 2 == 0 && bead_count == max_bead_count)
+        if (bead_count % 2 == 0 && bead_count == max_bead_count && max_bead_count >= 2)
         {
             const coord_t innermost_toolpath_location = ret.toolpath_locations[max_bead_count / 2 - 1];
             const coord_t innermost_toolpath_width = ret.bead_widths[max_bead_count / 2 - 1];
