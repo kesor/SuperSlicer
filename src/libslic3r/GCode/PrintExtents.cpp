@@ -119,9 +119,11 @@ BoundingBoxf get_print_object_extrusions_extents(const PrintObject &print_object
         BoundingBoxf bbox_this;
         for (const LayerRegion *layerm : layer->regions()) {
             bbox_this.merge(extrusionentity_extents(layerm->perimeters()));
-            for (const ExtrusionEntity *ee : layerm->fills())
+            for (const ExtrusionEntity *ee : layerm->fills()) {
                 // fill represents infill extrusions of a single island.
-                bbox_this.merge(extrusionentity_extents(*dynamic_cast<const ExtrusionEntityCollection*>(ee)));
+                if (auto* collection = dynamic_cast<const ExtrusionEntityCollection*>(ee))
+                    bbox_this.merge(extrusionentity_extents(*collection));
+            }
         }
         const SupportLayer *support_layer = dynamic_cast<const SupportLayer*>(layer);
         if (support_layer)
