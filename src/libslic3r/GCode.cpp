@@ -3688,7 +3688,10 @@ LayerResult GCodeGenerator::process_layer(
                 m_region = nullptr;
                 set_region_for_extrude(print, nullptr, nullptr, gcode);
                 // Adjust flow according to this layer's layer height.
-                this->extrude_skirt(dynamic_cast<ExtrusionLoop&>(*coll.entities()[i]),
+                auto* loop = dynamic_cast<ExtrusionLoop*>(coll.entities()[i]);
+                if (!loop)
+                    continue;
+                this->extrude_skirt(*loop,
                     // Override of skirt extrusion parameters. extrude_skirt() will fill in the extrusion width.
                     ExtrusionFlow{ mm3_per_mm, 0., layer_skirt_flow.height() }, gcode, "skirt"sv);
             }
