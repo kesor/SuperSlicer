@@ -146,7 +146,7 @@ static Semver parse_version_string(const std::string& version)
         return Semver::invalid();
 
 #if ENABLE_OPENGL_ES
-    const std::string version_container = (tokens.size() > 1 && boost::istarts_with(tokens[1], "ES")) ? tokens[2] : tokens[0];
+    const std::string version_container = (tokens.size() > 2 && boost::istarts_with(tokens[1], "ES")) ? tokens[2] : tokens[0];
 #endif // ENABLE_OPENGL_ES
 
     std::vector<std::string> numbers;
