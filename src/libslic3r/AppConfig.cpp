@@ -1074,7 +1074,11 @@ void AppConfig::save()
     // Rename the config atomically.
     // On Windows, the rename is likely NOT atomic, thus it may fail if PrusaSlicer crashes on another thread in the meanwhile.
     // To cope with that, we already made a backup of the config on Windows.
-    rename_file(path_pid, path);
+    std::error_code ec = rename_file(path_pid, path);
+    if (ec) {
+        BOOST_LOG_TRIVIAL(error) << "Failed to rename config file: " << ec.message();
+        throw FileIOError(std::string("Failed to rename config file: ") + ec.message());
+    }
     m_dirty = false;
 
     // ensure some options are in sync
