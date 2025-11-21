@@ -78,6 +78,9 @@ inline std::tuple<int, int> coordinate_aligned_ray_hit_count(size_t             
             //  Note that ray and line may overlap, when  (line.b[oc] - line.a[oc]) is zero
             //  In that case, we return negative number
             Floating distance_oc = line.b[other_coordinate] - line.a[other_coordinate];
+            if (std::abs(distance_oc) < EPSILON) {
+                return {-1, 0};
+            }
             Floating t     = (ray_origin[other_coordinate] - line.a[other_coordinate]) / distance_oc;
             Floating val_c = line.a[coordinate] + t * (line.b[coordinate] - line.a[coordinate]);
             if (ray_origin[coordinate] > val_c) {
