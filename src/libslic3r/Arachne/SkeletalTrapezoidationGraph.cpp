@@ -131,7 +131,7 @@ bool STHalfEdgeNode::isMultiIntersection()
     {
         if ( ! outgoing)
         { // This is a node on the outside
-            return false;
+            break;
         }
         if (outgoing->data.isCentral())
         {
