@@ -1036,8 +1036,10 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
             f->angle += z_object_angle;
         }
 
-        if (surface_fill.params.pattern == ipLightning)
-            dynamic_cast<FillLightning::Filler*>(f.get())->generator = lightning_generator;
+        if (surface_fill.params.pattern == ipLightning) {
+            if (auto* filler = dynamic_cast<FillLightning::Filler*>(f.get()))
+                filler->generator = lightning_generator;
+        }
 
         if (surface_fill.params.pattern == ipEnsuring) {
             auto *fill_ensuring = dynamic_cast<FillEnsuring *>(f.get());
@@ -1353,8 +1355,10 @@ Polylines Layer::generate_sparse_infill_polylines_for_anchoring(FillAdaptive::Oc
         f->adapt_fill_octree   = (surface_fill.params.pattern == ipSupportCubic) ? support_fill_octree : adaptive_fill_octree;
         f->set_config(&this->object()->print()->config(), &this->object()->config());
 
-        if (surface_fill.params.pattern == ipLightning)
-            dynamic_cast<FillLightning::Filler *>(f.get())->generator = lightning_generator;
+        if (surface_fill.params.pattern == ipLightning) {
+            if (auto* filler = dynamic_cast<FillLightning::Filler *>(f.get()))
+                filler->generator = lightning_generator;
+        }
 
         f->init_spacing(surface_fill.params.spacing, surface_fill.params);
 
