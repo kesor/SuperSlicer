@@ -33,6 +33,7 @@ typedef std::vector<ArcPolyline> ArcPolylines;
 class Polyline : public MultiPoint {
 public:
     Polyline() = default;
+    virtual ~Polyline() = default;
     Polyline(const Polyline& other) : MultiPoint(other.points) {}
     Polyline(Polyline&& other) : MultiPoint(std::move(other.points)) {}
     Polyline(std::initializer_list<Point> list) : MultiPoint(list) {}
