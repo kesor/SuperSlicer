@@ -590,11 +590,16 @@ ExtrusionEntityCollection make_brim(const Print &print, PrintTryCancel try_cance
     if (draft_shield && ! print.skirt().empty() && could_brim_intersects_skirt)
     {
         // Find the bounding polygons of the skirt
-        const Polygons skirt_inners = offset(dynamic_cast<ExtrusionLoop*>(print.skirt().entities.back())->polygon(),
+        auto* skirt_back = dynamic_cast<ExtrusionLoop*>(print.skirt().entities.back());
+        auto* skirt_front = dynamic_cast<ExtrusionLoop*>(print.skirt().entities.front());
+        if (!skirt_back || !skirt_front)
+            return out;
+        
+        const Polygons skirt_inners = offset(skirt_back->polygon(),
                                               -float(scale_(print.skirt_flow().spacing()))/2.f,
                                               ClipperLib::jtRound,
                                               float(scale_(0.1)));
-        const Polygons skirt_outers = offset(dynamic_cast<ExtrusionLoop*>(print.skirt().entities.front())->polygon(),
+        const Polygons skirt_outers = offset(skirt_front->polygon(),
                                               float(scale_(print.skirt_flow().spacing()))/2.f,
                                               ClipperLib::jtRound,
                                               float(scale_(0.1)));
