@@ -1006,19 +1006,19 @@ private:
     }
 
 	ModelVolume(ModelObject *object, const TriangleMesh &mesh, ModelVolumeType type = ModelVolumeType::MODEL_PART) :
-        m_mesh(new TriangleMesh(mesh)), m_type(type), object(object)
+        object(object), m_mesh(new TriangleMesh(mesh)), m_type(type), m_material_id()
     {
         assert(check());
         if (m_mesh->facets_count() > 1) calculate_convex_hull();
     }
     ModelVolume(ModelObject *object, TriangleMesh &&mesh, ModelVolumeType type = ModelVolumeType::MODEL_PART)
-        : m_mesh(new TriangleMesh(std::move(mesh))), m_type(type), object(object)
+        : object(object), m_mesh(new TriangleMesh(std::move(mesh))), m_type(type), m_material_id()
     {
         assert(check());
         if (m_mesh->facets_count() > 1) calculate_convex_hull();
     }
     ModelVolume(ModelObject *object, TriangleMesh &&mesh, TriangleMesh &&convex_hull, ModelVolumeType type = ModelVolumeType::MODEL_PART) :
-		m_mesh(new TriangleMesh(std::move(mesh))), m_convex_hull(new TriangleMesh(std::move(convex_hull))), m_type(type), object(object) {
+		object(object), m_mesh(new TriangleMesh(std::move(mesh))), m_convex_hull(new TriangleMesh(std::move(convex_hull))), m_type(type), m_material_id() {
         assert(check());
 	}
 
