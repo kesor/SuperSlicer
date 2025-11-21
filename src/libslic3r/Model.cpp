@@ -488,7 +488,7 @@ bool Model::looks_like_multipart_object() const
         BoundingBoxf3 bb_this = obj->volumes[0]->mesh().bounding_box();
 
         // FIXME: There is sadly the case when instances are empty (AMF files). The normalization of instances in that
-        // case is performed only after this function is called. For now (shortly before the 2.7.2 release, let's
+        // case is performed only after this function is called. For now (shortly before the 2.7.2 release), let's
         // just do this non-invasive check. Reordering all the functions could break it much more.
         BoundingBoxf3 tbb_this = (! obj->instances.empty() ? obj->instances[0]->transform_bounding_box(bb_this) : bb_this);
 
