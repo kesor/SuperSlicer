@@ -11056,7 +11056,10 @@ double min_object_distance(const ConfigBase *config, double ref_height /* = 0*/)
         double skirt_dist = 0;
         double brim_dist = 0;
         try {
-            std::vector<double> vals = dynamic_cast<const ConfigOptionFloats*>(config->option("nozzle_diameter"))->get_values();
+            auto* nozzle_opt = dynamic_cast<const ConfigOptionFloats*>(config->option("nozzle_diameter"));
+            if (!nozzle_opt)
+                throw ConfigurationError("Invalid nozzle_diameter config option type");
+            std::vector<double> vals = nozzle_opt->get_values();
             double max_nozzle_diam = 0;
             for (double val : vals) max_nozzle_diam = std::fmax(max_nozzle_diam, val);
 
@@ -11070,9 +11073,10 @@ double min_object_distance(const ConfigBase *config, double ref_height /* = 0*/)
             // Add aso the skirt dist if per object, as the arrange & check method don't use it yet.
             // we use the max nozzle, just to be on the safe side
             //ideally, we should use print::first_layer_height()
-            const double first_layer_height = 
-                dynamic_cast<const ConfigOptionFloatOrPercent *>(config->option("first_layer_height"))
-                    ->get_abs_value(max_nozzle_diam);
+            auto* first_layer_opt = dynamic_cast<const ConfigOptionFloatOrPercent *>(config->option("first_layer_height"));
+            if (!first_layer_opt)
+                throw ConfigurationError("Invalid first_layer_height config option type");
+            const double first_layer_height = first_layer_opt->get_abs_value(max_nozzle_diam);
             //add the skirt
             int skirts = config->option("skirts")->get_int();
             if (skirts > 0 && ref_height == 0)
