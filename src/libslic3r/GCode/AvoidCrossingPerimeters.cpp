@@ -111,7 +111,7 @@ struct FirstIntersectionVisitor
         for (auto it_contour_and_segment = cell_data_range.first; it_contour_and_segment != cell_data_range.second; ++it_contour_and_segment) {
             // End points of the line segment and their vector.
             auto segment = grid.segment(*it_contour_and_segment);
-            if (segment.first == *pt_current | segment.first == *pt_next | Geometry::segments_intersect(segment.first, segment.second, *pt_current, *pt_next)) {
+            if (segment.first == *pt_current || segment.first == *pt_next || Geometry::segments_intersect(segment.first, segment.second, *pt_current, *pt_next)) {
                 this->intersect = true;
                 intersection_contour_idx = it_contour_and_segment->first;
                 intersection_line_idx = it_contour_and_segment->second;
