@@ -105,11 +105,12 @@ AABBMesh::AABBMesh(const AABBMesh &other)
 
 AABBMesh &AABBMesh::operator=(const AABBMesh &other)
 {
-    m_tm = other.m_tm;
-    m_aabb.reset(new AABBImpl(*other.m_aabb));
-    m_vfidx = other.m_vfidx;
-    m_fnidx = other.m_fnidx;
-
+    if (this != &other) {
+        m_tm = other.m_tm;
+        m_aabb.reset(new AABBImpl(*other.m_aabb));
+        m_vfidx = other.m_vfidx;
+        m_fnidx = other.m_fnidx;
+    }
     return *this;
 }
 
