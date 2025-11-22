@@ -427,8 +427,10 @@ namespace boost { namespace polygon {
                 ++input_begin;
             }
             // skip last point since Boost will set last point = first point
-            assert(polygon.points.front() == polygon.points.back());
-            polygon.points.pop_back();
+            if (!polygon.points.empty()) {
+                assert(polygon.points.front() == polygon.points.back());
+                polygon.points.pop_back();
+            }
             return polygon;
         }
     };
