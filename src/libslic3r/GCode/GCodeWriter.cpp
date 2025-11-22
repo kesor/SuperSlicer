@@ -735,7 +735,7 @@ std::string GCodeWriter::travel_to_z(const double z, const std::string_view comm
         we don't perform the move but we only adjust the nominal Z by
         reducing the lift amount that will be used for unlift. */
     // note that if we move but it's lower and we are lifted, we can wait a bit for unlifting, to avoid possible dance on layer change.
-    if (!this->will_move_z(z) || z < m_pos.z() && m_lifted > EPSILON) {
+    if (!this->will_move_z(z) || (z < m_pos.z() && m_lifted > EPSILON)) {
         double nominal_z = m_pos.z() - m_lifted;
         m_lifted -= (z - nominal_z);
         if (std::abs(m_lifted) < EPSILON)
