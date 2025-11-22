@@ -3719,7 +3719,7 @@ ProcessSurfaceResult PerimeterGenerator::process_arachne(const Parameters &param
             const Point candidate_position = path->junctions.front().p;
             double      distance_sqr = (current_position - candidate_position).cast<double>().norm();
             if (distance_sqr < best_distance_sqr) { // Closer than the best candidate so far.
-                if (path->is_closed || (!path->is_closed && best_distance_sqr != std::numeric_limits<double>::max()) || (!path->is_closed && !is_best_closed)) {
+                if (path->is_closed || best_distance_sqr != std::numeric_limits<double>::max() || !is_best_closed) {
                     best_candidate = candidate_path_idx;
                     best_distance_sqr = distance_sqr;
                     is_best_closed = path->is_closed;
