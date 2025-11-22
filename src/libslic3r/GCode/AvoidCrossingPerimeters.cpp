@@ -1305,7 +1305,6 @@ static void jump_between_island(AvoidCrossingPerimeters::Boundary &boundary, // 
                 assert(new_dist_from_start > 0);
                 shortest_dist = new_dist_from_start;
                 shortest_dist_sqr = sqr(shortest_dist);
-                best_intersection_end = best_intersection_end;
                 if (res_start == contour_end.points[best_intersection_end.line_idx]) {
                     best_intersection_end.point = contour_end.points[best_intersection_end.line_idx];
                     best_intersection_end.distance = 0;
