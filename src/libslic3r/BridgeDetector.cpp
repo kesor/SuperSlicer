@@ -195,7 +195,7 @@ bool BridgeDetector::detect_angle(double bridge_direction_override /* = -1*/)
                     }
                     // check if the anchor search has been successful
                     // note: this 'if' isn't very effective (culls ~ 10% on a benchy) but it's almost free to compute
-                    if ((line_a_anchor_idx < clipped_lines.size()) & (line_b_anchor_idx < clipped_lines.size())) {
+                    if ((line_a_anchor_idx < clipped_lines.size()) && (line_b_anchor_idx < clipped_lines.size())) {
                         good_line = true;
                         // test if it's not a fake bridge
                         if (line_a_anchor_idx == line_b_anchor_idx) {
