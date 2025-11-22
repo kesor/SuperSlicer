@@ -8377,7 +8377,7 @@ bool GCodeGenerator::can_cross_perimeter(const Polyline& travel, bool offset)
                     // first, check if it's inside the contour (still, it can go over holes)
                     bool has_front = contains(expoly_2_bb.expolygon.contour, travel.front(), true);
                     bool has_back = contains(expoly_2_bb.expolygon.contour, travel.back(), true);
-                    if (!has_front && has_back || has_front && !has_back) {
+                    if ((!has_front && has_back) || (has_front && !has_back)) {
                         // has to cross something, stop here.
                         return true;
                     }
