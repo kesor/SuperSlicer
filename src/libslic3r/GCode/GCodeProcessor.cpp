@@ -2120,14 +2120,16 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
         }
         std::string_view second_part = first_part.substr(pos_separator + 1);
         first_part = first_part.substr(0, pos_separator);
-        double seam_x, seam_y;
+        double seam_x = 0.0, seam_y = 0.0;
         bool ok = parse_number(first_part, seam_x);
         ok = ok && parse_number(second_part, seam_y);
+        if (ok) {
         assert(!m_seam);
         m_seam = m_end_position;
         (*m_seam)[0] = seam_x;
         (*m_seam)[1] = seam_y;
         (*m_seam)[3] = 0;
+        }
         return;
     }
 
