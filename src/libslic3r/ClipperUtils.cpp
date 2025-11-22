@@ -1729,10 +1729,15 @@ ClipperLib_Z::Paths clip_extrusion(const ClipperLib_Z::Paths& subjects, const Cl
                 assert(start.z() > 0 && end.z() > 0);
 
                 double length_sqr = (end - start).cast<double>().squaredNorm();
-                double dist_sqr   = (pt - start).cast<double>().squaredNorm();
-                double t          = std::sqrt(dist_sqr / length_sqr);
+                if (length_sqr > EPSILON * EPSILON) {
+                    double dist_sqr   = (pt - start).cast<double>().squaredNorm();
+                    double t          = std::sqrt(dist_sqr / length_sqr);
 
-                pt.z() = start.z() + coord_t((end.z() - start.z()) * t);
+                    pt.z() = start.z() + coord_t((end.z() - start.z()) * t);
+                } else {
+                    // Degenerate case: segment is essentially a point
+                    pt.z() = start.z();
+                }
             }
         });
 
@@ -1899,8 +1904,13 @@ ClipperLib_Z::Paths clip_extrusion(const ClipperLib_Z::Paths& subjects, const Cl
                 const Point  pt_a(it_a->x(), it_a->y());
                 const Point  pt_b(it_b->x(), it_b->y());
                 const double line_len = (pt_b - pt_a).cast<double>().norm();
-                const double dist = (projected_pt_min - pt_a).cast<double>().norm();
-                c_pt.z() = coord_t(double(it_a->z()) + (dist / line_len) * double(it_b->z() - it_a->z()));
+                if (line_len > EPSILON) {
+                    const double dist = (projected_pt_min - pt_a).cast<double>().norm();
+                    c_pt.z() = coord_t(double(it_a->z()) + (dist / line_len) * double(it_b->z() - it_a->z()));
+                } else {
+                    // Degenerate case: line segment has near-zero length
+                    c_pt.z() = it_a->z();
+                }
             }
     assert([&clipped_paths = std::as_const(clipped_paths)]() -> bool {
         for (const ClipperLib_Z::Path& path : clipped_paths)
