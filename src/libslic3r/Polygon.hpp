@@ -34,6 +34,7 @@ class Polygon : public MultiPoint
 {
 public:
     Polygon() = default;
+    virtual ~Polygon() = default;
     explicit Polygon(const Points &points) : MultiPoint(points) {
         assert(points.size() != 1);
         if (points.size() > 1 && this->front().coincides_with(this->back()))
