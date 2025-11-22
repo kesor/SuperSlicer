@@ -4848,7 +4848,7 @@ void GCodeProcessor::post_process()
         export_lines.synchronize_moves(m_result);
 
     std::error_code err_code;
-    if (err_code = rename_file(out_path, result_filename)) {
+    if ((err_code = rename_file(out_path, result_filename))) {
         std::string err_msg = (std::string("Failed to rename the output G-code file from ") + out_path + " to " + result_filename + '\n' +
             "Is " + out_path + " locked? (gcp)" + err_code.message() + '\n');
         if (copy_file(out_path, result_filename, err_msg, true) != SUCCESS)
