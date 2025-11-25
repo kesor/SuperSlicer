@@ -510,7 +510,7 @@ namespace detail {
         Scalar vb = d5*d2 - d1*d6;
         if (vb <= 0 && d2 >= 0 && d6 <= 0) {
           Scalar denom = d2 - d6;
-          if (std::abs(denom) < EPSILON)
+          if (denom == 0)
             return a;  // Degenerate edge (a == c), return vertex
           Scalar w = d2 / denom;
           return a + w * ac;
@@ -519,14 +519,14 @@ namespace detail {
         Scalar va = d3*d6 - d5*d4;
         if (va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0) {
           Scalar denom = (d4 - d3) + (d5 - d6);
-          if (std::abs(denom) < EPSILON)
+          if (denom == 0)
             return b;  // Degenerate edge (b == c), return vertex
           Scalar w = (d4 - d3) / denom;
           return b + w * (c - b);
         }
         // P inside face region. Compute Q through its barycentric coordinates (u,v,w)
         Scalar sum = va + vb + vc;
-        if (std::abs(sum) < EPSILON)
+        if (sum == 0)
           return a;  // Degenerate triangle (collinear points), return vertex
         Scalar denom = Scalar(1.0) / sum;
         Scalar v = vb * denom;
