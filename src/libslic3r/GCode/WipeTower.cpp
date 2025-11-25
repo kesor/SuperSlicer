@@ -372,7 +372,7 @@ public:
         }
         //sprintf(all, "M109 S%d ;SKINNYDIP TOOLCHANGE WAIT FOR TEMP %s\n", tc_temp, fast ? "FAST MODE":"NORMAL MODE");
         //this->append(all);
-        set_extruder_temp(tc_temp, this->m_current_tool, true, ";SKINNYDIP TOOLCHANGE WAIT FOR TEMP " + fast ? "FAST MODE" : "NORMAL MODE");
+        set_extruder_temp(tc_temp, this->m_current_tool, true, std::string(";SKINNYDIP TOOLCHANGE WAIT FOR TEMP ") + (fast ? "FAST MODE" : "NORMAL MODE"));
         if (fan_on == true){
             set_fan(m_last_fan_speed, " ;restore cooling");
         }
@@ -385,7 +385,7 @@ public:
         //char tdbuf[128];
         //sprintf(tdbuf, "M104 S%d  ;SKINNYDIP BEGIN TOOLCHANGE TEMP %s\n", tc_temp, fast ? "FAST MODE":"NORMAL MODE");
         //m_gcode += tdbuf;
-        set_extruder_temp(tc_temp, this->m_current_tool, false, ";SKINNYDIP BEGIN TOOLCHANGE TEMP " + fast ? "FAST MODE" : "NORMAL MODE");
+        set_extruder_temp(tc_temp, this->m_current_tool, false, std::string(";SKINNYDIP BEGIN TOOLCHANGE TEMP ") + (fast ? "FAST MODE" : "NORMAL MODE"));
         return *this;
     }
 
@@ -395,7 +395,7 @@ public:
         //char tdbuf[128];
         //sprintf(tdbuf, "M104 S%d  ;RESTORE PRE-TOOLCHANGE TEMP %s\n", tc_temp, fast ? "FAST MODE":"NORMAL MODE");
         //m_gcode += tdbuf;
-        set_extruder_temp(tc_temp, this->m_current_tool , false, ";RESTORE PRE-TOOLCHANGE TEMP " + fast ? "FAST MODE" : "NORMAL MODE");
+        set_extruder_temp(tc_temp, this->m_current_tool , false, std::string(";RESTORE PRE-TOOLCHANGE TEMP ") + (fast ? "FAST MODE" : "NORMAL MODE"));
         return *this;
     }
 
@@ -1637,11 +1637,7 @@ WipeTower::ToolChangeResult WipeTower::finish_layer()
         const double spacing = brim_flow.spacing();
         // How many perimeters shall the brim have?
         size_t loops_num = (m_config->wipe_tower_brim_width.get_abs_value(m_nozzle_diameter) + spacing / 2) / spacing;
-        // ensure the loops_num is within bounds
-        if (m_config->wipe_tower_brim_width.get_abs_value(m_nozzle_diameter) <= 0) {
-            loops_num = 0;
-        }
-        assert(loops_num < 999);
+        
 
         writer.set_extrusion_flow(brim_flow.mm3_per_mm() / filament_area())
           .set_z(m_z_pos + m_config->z_offset.value) // Let the writer know the current Z position as a base for Z-hop.
