@@ -220,13 +220,13 @@ int64_t ExtrusionLine::calculateExtrusionAreaDeviationError(ExtrusionJunction A,
     const int64_t ab_length = (B.p - A.p).cast<int64_t>().norm();
     const int64_t bc_length = (C.p - B.p).cast<int64_t>().norm();
     const int64_t total_length = ab_length + bc_length;
-    
-    // Handle degenerate case where all points are at same location
-    if (total_length == 0) {
-        return 0;
-    }
-    
+    assert(ab_length > 0 && bc_length > 0);
+
     if (const coord_t width_diff = std::max(std::abs(B.w - A.w), std::abs(C.w - B.w)); width_diff > 1) {
+        // Handle degenerate case where all points are at same location
+        if (total_length == 0) {
+            return 0;
+        }
         // Adjust the width only if there is a difference, or else the rounding errors may produce the wrong
         // weighted average value.
         const int64_t ab_weight = (A.w + B.w) / 2;
