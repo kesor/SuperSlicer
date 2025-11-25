@@ -67,7 +67,7 @@ public:
     unsigned int descent_mask(const CoordType &point_coord, const double &search_radius, size_t idx, size_t dimension) const
     {
         CoordType dist = point_coord - this->coordinate(idx, dimension);
-        return (double(dist) * dist < search_radius + EPSILON) ?
+        return (double(dist) * dist < search_radius + double(std::is_floating_point<CoordType>::value ? EPSILON : SCALED_EPSILON)) ?
                                                                     // The plane intersects a hypersphere centered at point_coord of search_radius.
                    ((unsigned int)(VisitorReturnMask::CONTINUE_LEFT) | (unsigned int)(VisitorReturnMask::CONTINUE_RIGHT)) :
                    // The plane does not intersect the hypersphere.
