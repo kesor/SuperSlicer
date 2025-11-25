@@ -76,36 +76,17 @@ public:
 		Tag(std::string name, std::string description, ConfigOptionMode tag, std::string color_hash) : name(name), description(description), tag(tag), color_hash(color_hash) {}
 	};
 
-    struct ConfigurationEntry
-    {
-        std::string installed_name;
-        Semver      version;
-        boost::filesystem::path config_path;
-        boost::filesystem::path exe_path;
-        std::map<std::string, std::string> other_keys;
-        boost::filesystem::path get_config_path(const std::string &data_dir_root) const;
-    };
-
 	explicit AppConfig(EAppMode mode) :
 		m_mode(mode)
 	{
 		this->reset();
 	}
 
-    // Clear and reset to defaults.
-    void                reset();
-    // Override missing or keys with their defaults.
-    void                set_defaults();
-    void                init_ui_layout();
-    ConfigurationEntry  get_installation() { return m_data_dir; }
-    boost::filesystem::path data_dir() { return m_data_dir.config_path; }
-    // return false if already init
-    bool                init_root_data_dir(const std::string &default_app_data_path);
-    std::string         get_root_data_dir() { return m_data_dir_root; }
-    void                load_installed_repo(const boost::filesystem::path &filename);
-    void                save_installed_repo();
-    const std::vector<ConfigurationEntry> &get_all_slicer_installed() const { return m_all_slic3r_installed; }
-    void                set_new_installation(ConfigurationEntry new_install);
+	// Clear and reset to defaults.
+	void 			   	reset();
+	// Override missing or keys with their defaults.
+	void 			   	set_defaults();
+	void				init_ui_layout();
 
 	// Load the slic3r.ini from a user profile directory (or a datadir, if configured).
 	// return error string or empty strinf
@@ -187,6 +168,7 @@ public:
 	bool                set_vendors(const AppConfig &from) { return this->set_vendors(from.vendors()); }
 	bool 				set_vendors(const VendorMap &vendors);
 	bool 				set_vendors(VendorMap &&vendors);
+    // vendor map, need lock for thread safety
 	const VendorMap&    vendors() const { return m_vendors; }
 
 	// return recent/skein_directory or recent/config_directory or empty string.
@@ -217,8 +199,11 @@ public:
     LayoutEntry              get_ui_layout();
     std::vector<LayoutEntry> get_ui_layouts() { return m_ui_layout; }
 
-    // Tags
-    std::vector<Tag>         tags() { return m_tags; }
+    // Tags, need lock for thread safety
+    const std::vector<Tag>& tags() { return m_tags; }
+
+    // mutex lock, to access data or modify them. prevent problematic behavior while iterating on vectors (so mostly for tags(), vendors(), 
+    mutable std::recursive_mutex config_lock;
 
     // splashscreen
     std::string              splashscreen(bool is_editor);
@@ -320,11 +305,6 @@ private:
 	std::pair<std::string,std::string>                          m_default_splashscreen;
 	// hardware type
 	HardwareType												m_hardware;
-    // our installation. can be empty if data_dir() is set by command line
-    ConfigurationEntry                                          m_data_dir;
-    // directory of all configurations for all "installed" version.
-    std::string                                                 m_data_dir_root;
-    std::vector<ConfigurationEntry>                             m_all_slic3r_installed;
 };
 
 } // namespace Slic3r
