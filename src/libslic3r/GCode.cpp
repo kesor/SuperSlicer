@@ -3675,6 +3675,7 @@ LayerResult GCodeGenerator::process_layer(
     // Extrude the skirt, brim, support, perimeters, infill ordered by the extruders.
     for (const uint16_t extruder_id : layer_tools.extruders)
     {
+        m_wipe_tower->set_force_travel(m_new_z_target.has_value());
         gcode += (layer_tools.has_wipe_tower && m_wipe_tower) ?
             m_wipe_tower->tool_change(*this, extruder_id, extruder_id == layer_tools.extruders.back()) :
             this->set_extruder(extruder_id, print_z);
