@@ -884,13 +884,29 @@ void compute_global_occlusion(GlobalModelInfo &result, const PrintObject *po,
     // parameters of exponential distribution to compute area that will have with probability="probability" more than given number of samples="samples"
     float probability = 0.9f;
     float samples = 4;
+    
+    assert(result.mesh_samples.total_area > 0.0f);
+    if (result.mesh_samples.total_area <= 0.0f) {
+        result.mesh_samples_radius = 1.0f;  // Default radius for degenerate mesh
+        BOOST_LOG_TRIVIAL(warning) << "SeamPlacer: Mesh has zero total area, using default radius";
+        return;
+    }
+    
     float density = SeamPlacer::raycasting_visibility_samples_count / result.mesh_samples.total_area;
     // exponential probability distrubtion function is : f(x) = P(X > x) = e^(l*x) where l is the rate parameter (computed as 1/u where u is mean value)
     // probability that sampled area A with S samples contains more than samples count:
     //  P(S > samples in A) = e^-(samples/(density*A));   express A:
-    float search_area = samples / (-logf(probability) * density);
-    float search_radius = sqrt(search_area / PI);
-    result.mesh_samples_radius = search_radius;
+    
+    assert(probability > 0.0f && probability < 1.0f);
+    assert(density > 0.0f);
+    float log_prob = -logf(probability);
+    if (log_prob > 0.0f && density > 0.0f) {
+        float search_area = samples / (log_prob * density);
+        result.mesh_samples_radius = sqrt(search_area / PI);
+    } else {
+        result.mesh_samples_radius = 1.0f;  // Default radius
+        BOOST_LOG_TRIVIAL(warning) << "SeamPlacer: Invalid probability or density, using default radius";
+    }
 
     BOOST_LOG_TRIVIAL(debug)
     << "SeamPlacer: Compute visiblity sample points: end";
