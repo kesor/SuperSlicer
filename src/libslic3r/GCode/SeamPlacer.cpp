@@ -390,7 +390,11 @@ struct GlobalModelInfo {
             total_weight += weight;
         }
 
-        return total_visibility / total_weight;
+        assert(total_weight > 0.0f);
+        if (total_weight > 0.0f)
+            return total_visibility / total_weight;
+        else
+            return 1.0f;
 
     }
 
